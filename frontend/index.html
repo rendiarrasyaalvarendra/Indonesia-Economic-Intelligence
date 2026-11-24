@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indonesia Economic Intelligence</title>
+  <meta name="description" content="Platform analitik data ekonomi nasional Indonesia berbasis AI — BPS & Bank Indonesia">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+
+<div id="app-shell">
+
+  <!-- ======================================================
+       SIDEBAR
+       ====================================================== -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">
+      <div style="font-size:1.5rem;margin-bottom:6px">🇮🇩</div>
+      <h1>Indonesia Economic<br>Intelligence</h1>
+      <span>Platform Analitik Ekonomi AI</span>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Dashboard</div>
+      <div class="nav-item" data-page="overview">
+        <span class="nav-icon">📊</span> Ikhtisar Ekonomi
+      </div>
+
+      <div class="nav-section-label">Analisis Makroekonomi</div>
+      <div class="nav-item" data-page="gdp">
+        <span class="nav-icon">📈</span> Analisis PDB
+      </div>
+      <div class="nav-item" data-page="inflation">
+        <span class="nav-icon">📉</span> Analisis Inflasi
+      </div>
+      <div class="nav-item" data-page="monetary">
+        <span class="nav-icon">💱</span> Analisis Moneter
+      </div>
+
+      <div class="nav-section-label">Sosial & Ketenagakerjaan</div>
+      <div class="nav-item" data-page="employment">
+        <span class="nav-icon">👷</span> Ketenagakerjaan
+      </div>
+      <div class="nav-item" data-page="poverty">
+        <span class="nav-icon">🏘️</span> Kemiskinan
+      </div>
+
+      <div class="nav-section-label">Ekonomi Regional & Perdagangan</div>
+      <div class="nav-item" data-page="regional">
+        <span class="nav-icon">🗺️</span> Analisis Regional
+      </div>
+      <div class="nav-item" data-page="trade">
+        <span class="nav-icon">🌏</span> Perdagangan Internasional
+      </div>
+
+      <div class="nav-section-label">Analitik Lanjutan</div>
+      <div class="nav-item" data-page="insights">
+        <span class="nav-icon">💡</span> Insight Ekonomi
+      </div>
+      <div class="nav-item" data-page="forecasting">
+        <span class="nav-icon">🔮</span> Peramalan Ekonomi
+      </div>
+      <div class="nav-item" data-page="anomaly">
+        <span class="nav-icon">⚠️</span> Deteksi Anomali
+      </div>
+
+      <div class="nav-section-label">AI & Data</div>
+      <div class="nav-item" data-page="ai_analyst">
+        <span class="nav-icon">🤖</span> AI Economic Analyst
+      </div>
+      <div class="nav-item" data-page="reports">
+        <span class="nav-icon">📋</span> Laporan Ekonomi AI
+      </div>
+      <div class="nav-item" data-page="data_explorer">
+        <span class="nav-icon">🔍</span> Penjelajah Data
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <div id="api-status"><span class="badge badge-gray">● Memeriksa...</span></div>
+      <div style="margin-top:6px">Sumber: BPS & Bank Indonesia</div>
+    </div>
+  </nav>
+
+  <!-- ======================================================
+       MAIN CONTENT
+       ====================================================== -->
+  <div id="main-content">
+
+    <!-- Top Bar -->
+    <div id="topbar">
+      <button id="menu-toggle" aria-label="Toggle menu">☰</button>
+      <div class="topbar-title" id="topbar-page-title">Ikhtisar Ekonomi</div>
+      <div class="topbar-controls">
+        <span style="font-size:0.75rem;color:var(--color-muted)">Data: BPS & Bank Indonesia</span>
+        <button class="btn btn-ghost btn-sm" onclick="reloadPage(window.AppState?.currentPage || 'overview')" title="Refresh data">🔄</button>
+        <button class="btn btn-ghost btn-sm" onclick="navigateTo('data_explorer')" title="Ctrl+K: Cari data">🔍 Data</button>
+        <button class="btn btn-primary btn-sm" onclick="navigateTo('reports')">📋 Laporan</button>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: OVERVIEW
+         =================================================== -->
+    <div id="page-overview" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Ikhtisar Ekonomi Indonesia</h1>
+        <p class="page-subtitle">Indikator ekonomi nasional terkini dari BPS dan Bank Indonesia</p>
+      </div>
+
+      <!-- KPI Cards -->
+      <div id="kpi-grid" class="kpi-grid">
+        <div class="kpi-card"><div class="loading-spinner"><div class="spinner"></div></div></div>
+        <div class="kpi-card"><div class="loading-spinner"><div class="spinner"></div></div></div>
+        <div class="kpi-card"><div class="loading-spinner"><div class="spinner"></div></div></div>
+        <div class="kpi-card"><div class="loading-spinner"><div class="spinner"></div></div></div>
+      </div>
+
+      <!-- Trend charts grid -->
+      <div class="grid-2" style="margin-bottom:16px">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Pertumbuhan PDB</h3>
+              <p class="card-subtitle">% YoY — Harga Konstan 2010 | Sumber: BPS</p>
+            </div>
+          </div>
+          <div class="chart-wrapper"><canvas id="chart-gdp-trend"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Inflasi (YoY)</h3>
+              <p class="card-subtitle">% per Tahun | Sumber: BPS</p>
+            </div>
+          </div>
+          <div class="chart-wrapper"><canvas id="chart-inflation-trend"></canvas></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Kurs USD/IDR</h3>
+              <p class="card-subtitle">Rata-rata Bulanan | Sumber: Bank Indonesia</p>
+            </div>
+          </div>
+          <div class="chart-wrapper"><canvas id="chart-er-trend"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">BI Rate</h3>
+              <p class="card-subtitle">Suku Bunga Acuan | Sumber: Bank Indonesia</p>
+            </div>
+          </div>
+          <div class="chart-wrapper"><canvas id="chart-bi-trend"></canvas></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;font-size:0.75rem;color:var(--color-muted)">
+        Sumber data: <span id="overview-sources"></span>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: GDP
+         =================================================== -->
+    <div id="page-gdp" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis PDB Indonesia</h1>
+        <p class="page-subtitle">Produk Domestik Bruto — pertumbuhan, sektoral, dan pengeluaran | Sumber: BPS</p>
+      </div>
+      <div id="gdp-content">
+
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:200px">
+            <div class="kpi-label">PDB TERBARU</div>
+            <div class="kpi-value gdp" id="gdp-latest-value">—</div>
+            <div class="kpi-period">Tahun: <span id="gdp-latest-period">—</span></div>
+            <div style="font-size:0.8rem;color:var(--color-muted);margin-top:4px">Sebelumnya: <span id="gdp-prev-value">—</span></div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-header">
+              <div><h3 class="card-title">Tren PDB Tahunan</h3><p class="card-subtitle">% YoY, Harga Konstan 2010</p></div>
+            </div>
+            <div class="chart-wrapper tall"><canvas id="chart-gdp-annual"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div><h3 class="card-title">PDB Kuartalan</h3><p class="card-subtitle">% YoY, 16 Kuartal Terakhir</p></div>
+            </div>
+            <div class="chart-wrapper tall"><canvas id="chart-gdp-quarterly"></canvas></div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-header">
+              <div><h3 class="card-title">PDB menurut Lapangan Usaha (2023)</h3><p class="card-subtitle">Share (%)</p></div>
+            </div>
+            <div class="chart-wrapper"><canvas id="chart-gdp-sector"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div><h3 class="card-title">Pertumbuhan per Sektor (2023)</h3><p class="card-subtitle">% YoY</p></div>
+            </div>
+            <div class="chart-wrapper"><canvas id="chart-sector-growth"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div><h3 class="card-title">PDB menurut Pengeluaran (2023)</h3><p class="card-subtitle">Share & Pertumbuhan</p></div>
+          </div>
+          <div class="table-wrapper">
+            <table class="data-table" id="gdp-expenditure-table"></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: INFLATION
+         =================================================== -->
+    <div id="page-inflation" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Inflasi Indonesia</h1>
+        <p class="page-subtitle">IHK, MoM, YoY, YTD, dan perbandingan provinsi | Sumber: BPS</p>
+      </div>
+      <div id="inflation-content">
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">INFLASI YoY</div>
+            <div class="kpi-value inflation" id="inf-latest-yoy">—</div>
+            <div class="kpi-period">Periode: <span id="inf-latest-period">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">INFLASI MoM</div>
+            <div class="kpi-value" style="color:var(--color-cyan)" id="inf-latest-mom">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">IHK / CPI</div>
+            <div class="kpi-value" style="color:var(--color-text)" id="inf-latest-cpi">—</div>
+            <div class="kpi-period">Base: 2018=100</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">INFLASI YTD</div>
+            <div class="kpi-value" style="color:var(--color-green-400,#4ade80)" id="inf-latest-ytd">—</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Inflasi YoY (24 Bulan)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-inf-yoy"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Inflasi MoM (12 Bulan)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-inf-mom"></canvas></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Indeks Harga Konsumen (CPI)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-cpi"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Inflasi Provinsi (YoY)</h3>
+                <p class="card-subtitle">
+                  Tertinggi: <span id="inf-prov-highest">—</span> |
+                  Terendah: <span id="inf-prov-lowest">—</span>
+                </p>
+              </div>
+            </div>
+            <div class="chart-wrapper tall"><canvas id="chart-inf-provincial"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: MONETARY
+         =================================================== -->
+    <div id="page-monetary" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Moneter</h1>
+        <p class="page-subtitle">Kurs USD/IDR dan suku bunga acuan BI | Sumber: Bank Indonesia</p>
+      </div>
+      <div id="monetary-content">
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:200px">
+            <div class="kpi-label">KURS USD/IDR</div>
+            <div class="kpi-value exchange" id="er-latest">—</div>
+            <div class="kpi-period">Periode: <span id="er-period">—</span></div>
+            <div style="font-size:0.8rem;color:var(--color-muted);margin-top:4px">
+              <span id="er-mean">—</span><br><span id="er-range">—</span>
+            </div>
+          </div>
+          <div class="card" style="flex:1;min-width:200px">
+            <div class="kpi-label">BI RATE</div>
+            <div class="kpi-value birate" id="bi-latest">—</div>
+            <div class="kpi-period">Periode: <span id="bi-period">—</span></div>
+            <div style="font-size:0.8rem;color:var(--color-muted);margin-top:4px">
+              <span id="bi-mean">—</span><br><span id="bi-range">—</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><h3 class="card-title">Kurs USD/IDR — Tren Bulanan</h3></div>
+          <div class="chart-wrapper tall"><canvas id="chart-exchange-rate"></canvas></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">BI Rate — Tren Bulanan</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-bi-rate"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">USD/IDR vs BI Rate (Combined)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-monetary-combined"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: EMPLOYMENT
+         =================================================== -->
+    <div id="page-employment" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Ketenagakerjaan</h1>
+        <p class="page-subtitle">TPT, TPAK, penduduk bekerja dan menganggur | Sumber: BPS</p>
+      </div>
+      <div id="employment-content">
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">TPT</div>
+            <div class="kpi-value" style="color:var(--color-red-400,#f87171)" id="emp-tpt">—</div>
+            <div class="kpi-period">Periode: <span id="emp-period">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">TPAK</div>
+            <div class="kpi-value" style="color:var(--color-cyan)" id="emp-tpak">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">BEKERJA</div>
+            <div class="kpi-value" style="color:var(--color-success)" id="emp-employed">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">MENGANGGUR</div>
+            <div class="kpi-value" style="color:var(--color-danger)" id="emp-unemployed">—</div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">TPT — Tren</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-tpt"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">TPAK — Tren</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-tpak"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3 class="card-title">Penduduk Bekerja & Menganggur (Juta Jiwa)</h3></div>
+          <div class="chart-wrapper tall"><canvas id="chart-employment-trend"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: POVERTY
+         =================================================== -->
+    <div id="page-poverty" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Kemiskinan</h1>
+        <p class="page-subtitle">Tingkat kemiskinan, jumlah penduduk miskin, garis kemiskinan | Sumber: BPS</p>
+      </div>
+      <div id="poverty-content">
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">TINGKAT KEMISKINAN</div>
+            <div class="kpi-value" style="color:var(--color-orange)" id="pov-rate">—</div>
+            <div class="kpi-period">Periode: <span id="pov-period">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">JML PENDUDUK MISKIN</div>
+            <div class="kpi-value" style="color:var(--color-warning)" id="pov-population">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">GARIS KEMISKINAN</div>
+            <div class="kpi-value" style="font-size:1.2rem;color:var(--color-text)" id="pov-line">—</div>
+            <div class="kpi-period">Rp/kapita/bulan</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">PERKOTAAN / PEDESAAN</div>
+            <div style="margin-top:4px">
+              <div class="stat-row"><span class="stat-label">Perkotaan</span><span class="stat-value" id="pov-urban">—</span></div>
+              <div class="stat-row"><span class="stat-label">Pedesaan</span><span class="stat-value" id="pov-rural">—</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Tingkat Kemiskinan — Tren</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-poverty-rate"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Jumlah Penduduk Miskin (Juta)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-poverty-pop"></canvas></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3 class="card-title">Garis Kemiskinan — Tren</h3></div>
+          <div class="chart-wrapper"><canvas id="chart-poverty-line"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: REGIONAL
+         =================================================== -->
+    <div id="page-regional" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Ekonomi Regional</h1>
+        <p class="page-subtitle">Perbandingan indikator ekonomi antar provinsi | Sumber: BPS</p>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+        <strong style="color:var(--color-muted);font-size:0.85rem">Indikator:</strong>
+        <div id="regional-indicator-btns" class="btn-group">
+          <button class="btn btn-ghost btn-sm active" data-indicator="gdp">PDB Growth</button>
+          <button class="btn btn-ghost btn-sm" data-indicator="unemployment">TPT</button>
+          <button class="btn btn-ghost btn-sm" data-indicator="poverty">Kemiskinan</button>
+          <button class="btn btn-ghost btn-sm" data-indicator="inflation">Inflasi</button>
+        </div>
+        <span id="regional-label" class="badge badge-blue" style="margin-left:auto"></span>
+      </div>
+
+      <div id="regional-loading" class="loading-spinner" style="display:none">
+        <div class="spinner"></div> Memuat data regional...
+      </div>
+
+      <div id="regional-chart-wrapper">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">TERTINGGI</div>
+            <div class="stat-value" id="regional-highest">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">TERENDAH</div>
+            <div class="stat-value" id="regional-lowest">—</div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">RATA-RATA NASIONAL</div>
+            <div class="stat-value" id="regional-avg">—</div>
+          </div>
+        </div>
+
+        <div class="grid-2-1">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Top 15 Provinsi</h3></div>
+            <div class="chart-wrapper tall"><canvas id="chart-regional"></canvas></div>
+          </div>
+          <div>
+            <div class="card" style="height:100%;overflow-y:auto;max-height:420px">
+              <div class="card-header"><h3 class="card-title">Semua Provinsi</h3></div>
+              <div id="province-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="province-detail-panel" style="margin-top:16px"></div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: TRADE
+         =================================================== -->
+    <div id="page-trade" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Analisis Perdagangan Internasional</h1>
+        <p class="page-subtitle">Ekspor, impor, neraca perdagangan, dan komoditas | Sumber: BPS</p>
+      </div>
+      <div id="trade-content">
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">EKSPOR</div>
+            <div class="kpi-value" style="color:var(--color-success)" id="trade-exports">—</div>
+            <div class="kpi-period">YoY: <span id="trade-exp-growth">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">IMPOR</div>
+            <div class="kpi-value" style="color:var(--color-danger)" id="trade-imports">—</div>
+            <div class="kpi-period">YoY: <span id="trade-imp-growth">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">NERACA</div>
+            <div id="trade-balance" class="stat-value">—</div>
+            <div class="kpi-period">Periode: <span id="trade-period">—</span></div>
+          </div>
+          <div class="card" style="flex:1;min-width:140px">
+            <div class="kpi-label">SURPLUS BULAN</div>
+            <div class="stat-value" id="trade-surplus-months">—</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><h3 class="card-title">Ekspor & Impor — Tren Bulanan (USD Juta)</h3></div>
+          <div class="chart-wrapper tall"><canvas id="chart-trade-trend"></canvas></div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Neraca Perdagangan (24 Bulan)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-trade-balance"></canvas></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Komoditas Ekspor Utama (2023)</h3></div>
+            <div class="chart-wrapper"><canvas id="chart-commodities"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: INSIGHTS
+         =================================================== -->
+    <div id="page-insights" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Insight Ekonomi</h1>
+        <p class="page-subtitle">Temuan analitis otomatis dari dataset ekonomi resmi</p>
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center">
+        <strong style="color:var(--color-muted);font-size:0.85rem">Filter:</strong>
+        <div id="insights-filter-btns" class="btn-group">
+          <button class="btn btn-ghost btn-sm active" data-category="all">Semua</button>
+          <button class="btn btn-ghost btn-sm" data-category="trend">Tren</button>
+          <button class="btn btn-ghost btn-sm" data-category="extreme">Ekstrem</button>
+          <button class="btn btn-ghost btn-sm" data-category="anomaly">Anomali</button>
+          <button class="btn btn-ghost btn-sm" data-category="regional">Regional</button>
+        </div>
+      </div>
+
+      <div id="insights-content">
+        <div id="insights-list">
+          <div class="loading-spinner"><div class="spinner"></div> Memuat insight...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: FORECASTING
+         =================================================== -->
+    <div id="page-forecasting" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Peramalan Ekonomi</h1>
+        <p class="page-subtitle">Moving Average, Linear Regression, Exponential Smoothing, ARIMA</p>
+      </div>
+      <div id="forecasting-content">
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><h3 class="card-title">Konfigurasi Forecast</h3></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:1;min-width:200px">
+              <label class="form-label">Indikator</label>
+              <select class="form-control" id="forecast-indicator-sel"></select>
+            </div>
+            <div style="min-width:150px">
+              <label class="form-label">Horizon (Periode)</label>
+              <select class="form-control" id="forecast-horizon-sel">
+                <option value="3">3 Periode</option>
+                <option value="6" selected>6 Periode</option>
+                <option value="12">12 Periode</option>
+                <option value="24">24 Periode</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" id="forecast-run-btn">🔮 Jalankan Forecast</button>
+          </div>
+          <p style="font-size:0.75rem;color:var(--color-muted);margin-top:10px">
+            ⚠️ Forecast adalah estimasi statistik. Bukan prediksi resmi pemerintah.
+            Interval kepercayaan 95% ditampilkan sebagai batas bawah/atas.
+          </p>
+        </div>
+
+        <div class="card" id="forecast-result">
+          <div class="empty-state"><div class="empty-icon">🔮</div><p>Pilih indikator dan klik "Jalankan Forecast"</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: ANOMALY
+         =================================================== -->
+    <div id="page-anomaly" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Deteksi Anomali</h1>
+        <p class="page-subtitle">Z-Score, IQR, Moving Average Deviation — identifikasi perubahan tidak biasa</p>
+      </div>
+      <div id="anomaly-content">
+
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header"><h3 class="card-title">Konfigurasi Deteksi</h3></div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+            <div style="flex:1;min-width:200px">
+              <label class="form-label">Indikator</label>
+              <select class="form-control" id="anomaly-indicator-sel"></select>
+            </div>
+            <div style="min-width:180px">
+              <label class="form-label">Z-Score Threshold</label>
+              <input type="number" class="form-control" id="anomaly-z-threshold" value="2.5" step="0.1" min="1" max="5">
+            </div>
+            <button class="btn btn-primary" id="anomaly-run-btn">⚠️ Deteksi Anomali</button>
+          </div>
+          <p style="font-size:0.75rem;color:var(--color-muted);margin-top:10px">
+            ⚠️ Anomali statistik tidak otomatis berarti krisis ekonomi. Interpretasikan dalam konteks yang lebih luas.
+          </p>
+        </div>
+
+        <div class="card" id="anomaly-result">
+          <div class="empty-state"><div class="empty-icon">⚠️</div><p>Pilih indikator dan klik "Deteksi Anomali"</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: AI ANALYST
+         =================================================== -->
+    <div id="page-ai_analyst" class="page">
+      <div class="page-header">
+        <h1 class="page-title">AI Economic Analyst</h1>
+        <p class="page-subtitle">Tanya jawab ekonomi Indonesia berbasis data resmi BPS & Bank Indonesia</p>
+      </div>
+
+      <div class="card" style="max-width:860px;margin:0 auto">
+        <div class="card-header">
+          <div>
+            <h3 class="card-title">🤖 AI Economic Analyst Indonesia</h3>
+            <p class="card-subtitle">Didukung oleh data resmi BPS dan Bank Indonesia</p>
+          </div>
+          <span class="badge badge-blue">AI</span>
+        </div>
+
+        <div style="padding:12px 16px;border-bottom:1px solid var(--color-border)">
+          <div style="font-size:0.8rem;color:var(--color-muted);margin-bottom:6px">Pertanyaan umum:</div>
+          <div id="chat-suggestions"></div>
+        </div>
+
+        <div id="chat-messages"></div>
+
+        <div class="chat-input-area">
+          <input type="text" class="form-control" id="chat-input"
+            placeholder="Tanya tentang ekonomi Indonesia... (Enter untuk kirim)">
+          <button class="btn btn-primary" id="chat-send-btn">Kirim →</button>
+        </div>
+
+        <div style="padding:10px 16px;font-size:0.72rem;color:var(--color-muted);border-top:1px solid var(--color-border)">
+          🛡️ AI menggunakan data resmi BPS & Bank Indonesia. Respons AI tidak boleh menggantikan analisis ahli.
+          Konfigurasikan OPENAI_API_KEY untuk analisis mendalam.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: REPORTS
+         =================================================== -->
+    <div id="page-reports" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Laporan Ekonomi AI</h1>
+        <p class="page-subtitle">Generate laporan analitis terstruktur secara otomatis</p>
+      </div>
+
+      <div class="grid-2-1" style="align-items:start">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="card-header"><h3 class="card-title">Konfigurasi Laporan</h3></div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div>
+                <label class="form-label">Periode Mulai (opsional)</label>
+                <input type="text" class="form-control" id="report-period-start" placeholder="Contoh: 2023-01">
+              </div>
+              <div>
+                <label class="form-label">Periode Akhir (opsional)</label>
+                <input type="text" class="form-control" id="report-period-end" placeholder="Contoh: 2024-12">
+              </div>
+            </div>
+
+            <div id="report-indicators" style="margin-bottom:16px">
+              <label class="form-label">Indikator (default: semua)</label>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+                <label style="display:flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--color-muted)">
+                  <input type="checkbox" value="gdp"> PDB</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--color-muted)">
+                  <input type="checkbox" value="inflation"> Inflasi</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--color-muted)">
+                  <input type="checkbox" value="monetary"> Moneter</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--color-muted)">
+                  <input type="checkbox" value="employment"> Ketenagakerjaan</label>
+                <label style="display:flex;align-items:center;gap:4px;font-size:0.85rem;color:var(--color-muted)">
+                  <input type="checkbox" value="trade"> Perdagangan</label>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-primary" id="report-generate-btn">📋 Generate HTML</button>
+              <button class="btn btn-ghost" id="report-pdf-btn">🖨️ Buka untuk Print/PDF</button>
+              <button class="btn btn-ghost" id="report-print-btn">🖨️ Print</button>
+            </div>
+
+            <div id="report-status" style="margin-top:10px;font-size:0.85rem"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3 class="card-title">Struktur Laporan</h3></div>
+            <ol style="font-size:0.85rem;color:var(--color-muted);line-height:2;padding-left:20px;margin:0">
+              <li>Ringkasan Eksekutif</li>
+              <li>Ikhtisar Ekonomi (KPI)</li>
+              <li>Analisis PDB</li>
+              <li>Analisis Inflasi</li>
+              <li>Analisis Moneter</li>
+              <li>Ketenagakerjaan &amp; Kemiskinan</li>
+              <li>Perdagangan Internasional</li>
+              <li>Insight &amp; Temuan</li>
+              <li>Sumber Data &amp; Metodologi</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card" style="height:700px;display:flex;flex-direction:column">
+          <div class="card-header"><h3 class="card-title">Pratinjau Laporan</h3></div>
+          <div id="report-placeholder" style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--color-muted)">
+            <div style="text-align:center">
+              <div style="font-size:3rem;margin-bottom:12px">📋</div>
+              <p>Klik "Generate HTML" untuk melihat pratinjau laporan</p>
+            </div>
+          </div>
+          <iframe id="report-preview-frame" style="flex:1;border:none;display:none;border-radius:0 0 12px 12px"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================================
+         PAGE: DATA EXPLORER
+         =================================================== -->
+    <div id="page-data_explorer" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Penjelajah Data</h1>
+        <p class="page-subtitle">Jelajahi, filter, dan ekspor semua dataset ekonomi Indonesia</p>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+          <div style="flex:2;min-width:200px">
+            <label class="form-label">🔍 Cari</label>
+            <input type="text" class="form-control" id="explorer-search" placeholder="Cari indikator atau wilayah... (Ctrl+K)">
+          </div>
+          <div style="flex:1;min-width:160px">
+            <label class="form-label">Indikator</label>
+            <select class="form-control" id="explorer-indicator-sel"><option value="">Semua</option></select>
+          </div>
+          <div style="min-width:140px">
+            <label class="form-label">Sumber</label>
+            <select class="form-control" id="explorer-source-sel">
+              <option value="">Semua Sumber</option>
+              <option value="BPS">BPS</option>
+              <option value="Bank Indonesia">Bank Indonesia</option>
+            </select>
+          </div>
+          <div style="min-width:140px">
+            <label class="form-label">Frekuensi</label>
+            <select class="form-control" id="explorer-freq-sel">
+              <option value="">Semua</option>
+              <option value="monthly">Bulanan</option>
+              <option value="quarterly">Kuartalan</option>
+              <option value="semi-annual">Semi-Annual</option>
+              <option value="annual">Tahunan</option>
+            </select>
+          </div>
+          <div style="min-width:100px">
+            <label class="form-label">Tahun Mulai</label>
+            <input type="number" class="form-control" id="explorer-year-start" placeholder="2020" min="2000" max="2030">
+          </div>
+          <div style="min-width:100px">
+            <label class="form-label">Tahun Akhir</label>
+            <input type="number" class="form-control" id="explorer-year-end" placeholder="2024" min="2000" max="2030">
+          </div>
+          <button class="btn btn-ghost" id="explorer-reset-btn">↺ Reset</button>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+          <span style="font-size:0.8rem;color:var(--color-muted)" id="explorer-count">—</span>
+          <div style="margin-left:auto;display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" id="explorer-export-csv">⬇️ CSV</button>
+            <button class="btn btn-ghost btn-sm" id="explorer-export-json">⬇️ JSON</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="explorer-table-wrapper">
+          <div class="loading-spinner"><div class="spinner"></div> Memuat data...</div>
+        </div>
+        <div id="explorer-pagination" class="pagination"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="text-align:center;padding:20px;border-top:1px solid var(--color-border);color:var(--color-muted);font-size:0.75rem;margin-top:auto">
+      Indonesia Economic Intelligence Platform &copy; <span id="footer-year">2024</span> |
+      Data: BPS (<a href="https://bps.go.id" target="_blank" style="color:var(--color-accent)">bps.go.id</a>) &amp;
+      Bank Indonesia (<a href="https://bi.go.id" target="_blank" style="color:var(--color-accent)">bi.go.id</a>)
+    </footer>
+
+  </div><!-- /#main-content -->
+</div><!-- /#app-shell -->
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<!-- API Client -->
+<script src="/static/js/api.js"></script>
+<!-- Chart helpers -->
+<script src="/static/js/charts.js"></script>
+<!-- Modules -->
+<script src="/static/js/modules/overview.js"></script>
+<script src="/static/js/modules/inflation.js"></script>
+<script src="/static/js/modules/gdp.js"></script>
+<script src="/static/js/modules/monetary.js"></script>
+<script src="/static/js/modules/employment.js"></script>
+<script src="/static/js/modules/regional.js"></script>
+<script src="/static/js/modules/trade.js"></script>
+<script src="/static/js/modules/insights.js"></script>
+<script src="/static/js/modules/forecasting.js"></script>
+<script src="/static/js/modules/anomaly.js"></script>
+<script src="/static/js/modules/ai_analyst.js"></script>
+<script src="/static/js/modules/data_explorer.js"></script>
+<script src="/static/js/modules/reports.js"></script>
+<!-- Main App -->
+<script src="/static/js/app.js"></script>
+
+</body>
+</html>

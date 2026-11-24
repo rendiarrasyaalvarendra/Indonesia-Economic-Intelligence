@@ -1,0 +1,472 @@
+"""
+Indonesia Economic Intelligence — Embedded Official Datasets
+
+All data is sourced from BPS (Statistics Indonesia) and Bank Indonesia
+official publications. These serve as reliable fallback data when
+API connectivity is unavailable.
+
+Sources:
+  - BPS: https://www.bps.go.id
+  - Bank Indonesia: https://www.bi.go.id
+"""
+
+# =============================================================================
+# GDP GROWTH — Annual, percent change (BPS)
+# Source: BPS, National Accounts, constant 2010 prices
+# Unit: % YoY
+# =============================================================================
+GDP_ANNUAL = [
+    {"period": "2000", "value": 4.92},
+    {"period": "2001", "value": 3.64},
+    {"period": "2002", "value": 4.50},
+    {"period": "2003", "value": 4.78},
+    {"period": "2004", "value": 5.03},
+    {"period": "2005", "value": 5.69},
+    {"period": "2006", "value": 5.50},
+    {"period": "2007", "value": 6.35},
+    {"period": "2008", "value": 6.01},
+    {"period": "2009", "value": 4.63},
+    {"period": "2010", "value": 6.22},
+    {"period": "2011", "value": 6.49},
+    {"period": "2012", "value": 6.23},
+    {"period": "2013", "value": 5.78},
+    {"period": "2014", "value": 5.02},
+    {"period": "2015", "value": 4.88},
+    {"period": "2016", "value": 5.03},
+    {"period": "2017", "value": 5.07},
+    {"period": "2018", "value": 5.17},
+    {"period": "2019", "value": 5.02},
+    {"period": "2020", "value": -2.07},
+    {"period": "2021", "value": 3.69},
+    {"period": "2022", "value": 5.31},
+    {"period": "2023", "value": 5.05},
+    {"period": "2024", "value": 5.03},
+]
+
+# GDP Quarterly — % YoY (BPS)
+GDP_QUARTERLY = [
+    {"period": "2020-Q1", "value": 2.97},
+    {"period": "2020-Q2", "value": -5.32},
+    {"period": "2020-Q3", "value": -3.49},
+    {"period": "2020-Q4", "value": -2.19},
+    {"period": "2021-Q1", "value": -0.71},
+    {"period": "2021-Q2", "value": 7.07},
+    {"period": "2021-Q3", "value": 3.51},
+    {"period": "2021-Q4", "value": 5.02},
+    {"period": "2022-Q1", "value": 5.01},
+    {"period": "2022-Q2", "value": 5.44},
+    {"period": "2022-Q3", "value": 5.72},
+    {"period": "2022-Q4", "value": 5.01},
+    {"period": "2023-Q1", "value": 5.03},
+    {"period": "2023-Q2", "value": 5.17},
+    {"period": "2023-Q3", "value": 4.94},
+    {"period": "2023-Q4", "value": 5.04},
+    {"period": "2024-Q1", "value": 5.11},
+    {"period": "2024-Q2", "value": 5.05},
+    {"period": "2024-Q3", "value": 4.95},
+    {"period": "2024-Q4", "value": 5.02},
+]
+
+# GDP by Sector (% share, 2023, BPS)
+GDP_BY_SECTOR = [
+    {"sector": "Industri Pengolahan", "share": 18.67, "growth": 4.64},
+    {"sector": "Perdagangan Besar & Eceran", "share": 13.01, "growth": 4.89},
+    {"sector": "Pertanian, Kehutanan & Perikanan", "share": 12.98, "growth": 1.33},
+    {"sector": "Konstruksi", "share": 10.45, "growth": 4.87},
+    {"sector": "Pertambangan & Penggalian", "share": 9.52, "growth": 4.00},
+    {"sector": "Administrasi Pemerintahan", "share": 3.67, "growth": 2.44},
+    {"sector": "Transportasi & Pergudangan", "share": 5.40, "growth": 9.74},
+    {"sector": "Jasa Keuangan & Asuransi", "share": 4.56, "growth": 6.15},
+    {"sector": "Informasi & Komunikasi", "share": 4.44, "growth": 7.59},
+    {"sector": "Lainnya", "share": 17.30, "growth": 5.00},
+]
+
+# GDP by Expenditure (% share, 2023, BPS)
+GDP_BY_EXPENDITURE = [
+    {"component": "Konsumsi Rumah Tangga", "share": 53.48, "growth": 4.82},
+    {"component": "Pembentukan Modal Tetap Bruto", "share": 29.06, "growth": 4.40},
+    {"component": "Ekspor Barang & Jasa", "share": 21.68, "growth": 1.32},
+    {"component": "Konsumsi Pemerintah", "share": 7.42, "growth": 2.95},
+    {"component": "Impor Barang & Jasa", "share": -18.56, "growth": 1.63},
+    {"component": "Perubahan Inventori & Diskrepan", "share": 6.92, "growth": None},
+]
+
+# =============================================================================
+# INFLATION — Monthly CPI (BPS, % MoM and % YoY)
+# =============================================================================
+INFLATION_MONTHLY = [
+    {"period": "2022-01", "mom": 0.56, "yoy": 2.18, "cpi": 108.25},
+    {"period": "2022-02", "mom": 0.02, "yoy": 2.06, "cpi": 108.27},
+    {"period": "2022-03", "mom": 0.66, "yoy": 2.64, "cpi": 108.95},
+    {"period": "2022-04", "mom": 0.95, "yoy": 3.47, "cpi": 109.99},
+    {"period": "2022-05", "mom": 0.40, "yoy": 3.55, "cpi": 110.42},
+    {"period": "2022-06", "mom": 0.61, "yoy": 4.35, "cpi": 111.09},
+    {"period": "2022-07", "mom": 0.64, "yoy": 4.94, "cpi": 111.80},
+    {"period": "2022-08", "mom": 0.21, "yoy": 4.69, "cpi": 112.04},
+    {"period": "2022-09", "mom": 1.17, "yoy": 5.95, "cpi": 113.35},
+    {"period": "2022-10", "mom": 0.11, "yoy": 5.71, "cpi": 113.47},
+    {"period": "2022-11", "mom": 0.09, "yoy": 5.42, "cpi": 113.59},
+    {"period": "2022-12", "mom": 0.66, "yoy": 5.51, "cpi": 114.34},
+    {"period": "2023-01", "mom": 0.34, "yoy": 5.28, "cpi": 114.73},
+    {"period": "2023-02", "mom": 0.16, "yoy": 5.47, "cpi": 114.91},
+    {"period": "2023-03", "mom": 0.18, "yoy": 4.97, "cpi": 115.11},
+    {"period": "2023-04", "mom": 0.33, "yoy": 4.33, "cpi": 115.49},
+    {"period": "2023-05", "mom": 0.09, "yoy": 4.00, "cpi": 115.59},
+    {"period": "2023-06", "mom": 0.14, "yoy": 3.52, "cpi": 115.75},
+    {"period": "2023-07", "mom": 0.21, "yoy": 3.08, "cpi": 115.99},
+    {"period": "2023-08", "mom": 0.13, "yoy": 3.27, "cpi": 116.14},
+    {"period": "2023-09", "mom": 0.19, "yoy": 2.28, "cpi": 116.36},
+    {"period": "2023-10", "mom": -0.17, "yoy": 2.56, "cpi": 116.16},
+    {"period": "2023-11", "mom": 0.38, "yoy": 2.86, "cpi": 116.60},
+    {"period": "2023-12", "mom": 0.41, "yoy": 2.61, "cpi": 117.08},
+    {"period": "2024-01", "mom": 0.04, "yoy": 2.57, "cpi": 117.12},
+    {"period": "2024-02", "mom": 0.37, "yoy": 2.75, "cpi": 117.55},
+    {"period": "2024-03", "mom": 0.52, "yoy": 3.05, "cpi": 118.16},
+    {"period": "2024-04", "mom": 0.25, "yoy": 3.00, "cpi": 118.45},
+    {"period": "2024-05", "mom": -0.03, "yoy": 2.84, "cpi": 118.42},
+    {"period": "2024-06", "mom": 0.08, "yoy": 2.51, "cpi": 118.51},
+    {"period": "2024-07", "mom": 0.08, "yoy": 2.13, "cpi": 118.60},
+    {"period": "2024-08", "mom": -0.03, "yoy": 2.12, "cpi": 118.57},
+    {"period": "2024-09", "mom": 0.12, "yoy": 1.84, "cpi": 118.71},
+    {"period": "2024-10", "mom": 0.08, "yoy": 1.71, "cpi": 118.80},
+    {"period": "2024-11", "mom": 0.30, "yoy": 1.55, "cpi": 119.16},
+    {"period": "2024-12", "mom": 0.44, "yoy": 1.57, "cpi": 119.68},
+]
+
+# Provincial Inflation — YoY (%), December 2024, BPS
+INFLATION_PROVINCIAL = [
+    {"province_code": "11", "province_name": "Aceh", "yoy": 1.21},
+    {"province_code": "12", "province_name": "Sumatera Utara", "yoy": 1.44},
+    {"province_code": "13", "province_name": "Sumatera Barat", "yoy": 1.52},
+    {"province_code": "14", "province_name": "Riau", "yoy": 1.68},
+    {"province_code": "15", "province_name": "Jambi", "yoy": 1.73},
+    {"province_code": "16", "province_name": "Sumatera Selatan", "yoy": 1.65},
+    {"province_code": "17", "province_name": "Bengkulu", "yoy": 2.10},
+    {"province_code": "18", "province_name": "Lampung", "yoy": 1.89},
+    {"province_code": "19", "province_name": "Kepulauan Bangka Belitung", "yoy": 1.44},
+    {"province_code": "21", "province_name": "Kepulauan Riau", "yoy": 1.58},
+    {"province_code": "31", "province_name": "DKI Jakarta", "yoy": 1.52},
+    {"province_code": "32", "province_name": "Jawa Barat", "yoy": 1.44},
+    {"province_code": "33", "province_name": "Jawa Tengah", "yoy": 1.49},
+    {"province_code": "34", "province_name": "DI Yogyakarta", "yoy": 1.74},
+    {"province_code": "35", "province_name": "Jawa Timur", "yoy": 1.59},
+    {"province_code": "36", "province_name": "Banten", "yoy": 1.70},
+    {"province_code": "51", "province_name": "Bali", "yoy": 2.17},
+    {"province_code": "52", "province_name": "Nusa Tenggara Barat", "yoy": 1.85},
+    {"province_code": "53", "province_name": "Nusa Tenggara Timur", "yoy": 2.32},
+    {"province_code": "61", "province_name": "Kalimantan Barat", "yoy": 1.61},
+    {"province_code": "62", "province_name": "Kalimantan Tengah", "yoy": 1.75},
+    {"province_code": "63", "province_name": "Kalimantan Selatan", "yoy": 1.86},
+    {"province_code": "64", "province_name": "Kalimantan Timur", "yoy": 1.44},
+    {"province_code": "65", "province_name": "Kalimantan Utara", "yoy": 1.52},
+    {"province_code": "71", "province_name": "Sulawesi Utara", "yoy": 2.03},
+    {"province_code": "72", "province_name": "Sulawesi Tengah", "yoy": 2.15},
+    {"province_code": "73", "province_name": "Sulawesi Selatan", "yoy": 1.68},
+    {"province_code": "74", "province_name": "Sulawesi Tenggara", "yoy": 1.98},
+    {"province_code": "75", "province_name": "Gorontalo", "yoy": 2.40},
+    {"province_code": "76", "province_name": "Sulawesi Barat", "yoy": 2.05},
+    {"province_code": "81", "province_name": "Maluku", "yoy": 2.68},
+    {"province_code": "82", "province_name": "Maluku Utara", "yoy": 2.45},
+    {"province_code": "91", "province_name": "Papua Barat", "yoy": 2.89},
+    {"province_code": "94", "province_name": "Papua", "yoy": 3.10},
+]
+
+# =============================================================================
+# MONETARY — USD/IDR Exchange Rate (BI, monthly average)
+# =============================================================================
+EXCHANGE_RATE_MONTHLY = [
+    {"period": "2022-01", "usd_idr": 14364},
+    {"period": "2022-02", "usd_idr": 14330},
+    {"period": "2022-03", "usd_idr": 14350},
+    {"period": "2022-04", "usd_idr": 14448},
+    {"period": "2022-05", "usd_idr": 14600},
+    {"period": "2022-06", "usd_idr": 14837},
+    {"period": "2022-07", "usd_idr": 15012},
+    {"period": "2022-08", "usd_idr": 14889},
+    {"period": "2022-09", "usd_idr": 15143},
+    {"period": "2022-10", "usd_idr": 15239},
+    {"period": "2022-11", "usd_idr": 15716},
+    {"period": "2022-12", "usd_idr": 15581},
+    {"period": "2023-01", "usd_idr": 15260},
+    {"period": "2023-02", "usd_idr": 15170},
+    {"period": "2023-03", "usd_idr": 15372},
+    {"period": "2023-04", "usd_idr": 14906},
+    {"period": "2023-05", "usd_idr": 14946},
+    {"period": "2023-06", "usd_idr": 15016},
+    {"period": "2023-07", "usd_idr": 15107},
+    {"period": "2023-08", "usd_idr": 15337},
+    {"period": "2023-09", "usd_idr": 15503},
+    {"period": "2023-10", "usd_idr": 15880},
+    {"period": "2023-11", "usd_idr": 15694},
+    {"period": "2023-12", "usd_idr": 15397},
+    {"period": "2024-01", "usd_idr": 15635},
+    {"period": "2024-02", "usd_idr": 15648},
+    {"period": "2024-03", "usd_idr": 15736},
+    {"period": "2024-04", "usd_idr": 16180},
+    {"period": "2024-05", "usd_idr": 16090},
+    {"period": "2024-06", "usd_idr": 16367},
+    {"period": "2024-07", "usd_idr": 16167},
+    {"period": "2024-08", "usd_idr": 15913},
+    {"period": "2024-09", "usd_idr": 15380},
+    {"period": "2024-10", "usd_idr": 15718},
+    {"period": "2024-11", "usd_idr": 15965},
+    {"period": "2024-12", "usd_idr": 16077},
+]
+
+# BI Rate — Monthly (Bank Indonesia)
+BI_RATE_MONTHLY = [
+    {"period": "2022-01", "rate": 3.50},
+    {"period": "2022-02", "rate": 3.50},
+    {"period": "2022-03", "rate": 3.50},
+    {"period": "2022-04", "rate": 3.50},
+    {"period": "2022-05", "rate": 3.50},
+    {"period": "2022-06", "rate": 3.50},
+    {"period": "2022-07", "rate": 3.50},
+    {"period": "2022-08", "rate": 3.75},
+    {"period": "2022-09", "rate": 4.25},
+    {"period": "2022-10", "rate": 4.75},
+    {"period": "2022-11", "rate": 5.25},
+    {"period": "2022-12", "rate": 5.50},
+    {"period": "2023-01", "rate": 5.75},
+    {"period": "2023-02", "rate": 5.75},
+    {"period": "2023-03", "rate": 5.75},
+    {"period": "2023-04", "rate": 5.75},
+    {"period": "2023-05", "rate": 5.75},
+    {"period": "2023-06", "rate": 5.75},
+    {"period": "2023-07", "rate": 5.75},
+    {"period": "2023-08", "rate": 5.75},
+    {"period": "2023-09", "rate": 5.75},
+    {"period": "2023-10", "rate": 6.00},
+    {"period": "2023-11", "rate": 6.00},
+    {"period": "2023-12", "rate": 6.00},
+    {"period": "2024-01", "rate": 6.00},
+    {"period": "2024-02", "rate": 6.00},
+    {"period": "2024-03", "rate": 6.00},
+    {"period": "2024-04", "rate": 6.25},
+    {"period": "2024-05", "rate": 6.25},
+    {"period": "2024-06", "rate": 6.25},
+    {"period": "2024-07", "rate": 6.25},
+    {"period": "2024-08", "rate": 6.25},
+    {"period": "2024-09", "rate": 6.00},
+    {"period": "2024-10", "rate": 6.00},
+    {"period": "2024-11", "rate": 6.00},
+    {"period": "2024-12", "rate": 6.00},
+]
+
+# =============================================================================
+# EMPLOYMENT — Semi-annual, BPS (February and August surveys)
+# TPT = Tingkat Pengangguran Terbuka (Open Unemployment Rate), %
+# TPAK = Tingkat Partisipasi Angkatan Kerja (Labor Force Participation Rate), %
+# =============================================================================
+EMPLOYMENT_DATA = [
+    {"period": "2018-02", "tpt": 5.13, "tpak": 69.20, "employed_m": 127.07, "unemployed_m": 6.87},
+    {"period": "2018-08", "tpt": 5.34, "tpak": 67.26, "employed_m": 124.01, "unemployed_m": 7.00},
+    {"period": "2019-02", "tpt": 5.01, "tpak": 69.11, "employed_m": 129.36, "unemployed_m": 6.82},
+    {"period": "2019-08", "tpt": 5.28, "tpak": 67.49, "employed_m": 126.52, "unemployed_m": 7.05},
+    {"period": "2020-02", "tpt": 4.99, "tpak": 69.17, "employed_m": 131.03, "unemployed_m": 6.88},
+    {"period": "2020-08", "tpt": 7.07, "tpak": 67.77, "employed_m": 128.45, "unemployed_m": 9.77},
+    {"period": "2021-02", "tpt": 6.26, "tpak": 68.02, "employed_m": 131.06, "unemployed_m": 8.75},
+    {"period": "2021-08", "tpt": 6.49, "tpak": 67.80, "employed_m": 131.05, "unemployed_m": 9.10},
+    {"period": "2022-02", "tpt": 5.83, "tpak": 68.63, "employed_m": 135.61, "unemployed_m": 8.40},
+    {"period": "2022-08", "tpt": 5.86, "tpak": 68.63, "employed_m": 135.30, "unemployed_m": 8.42},
+    {"period": "2023-02", "tpt": 5.45, "tpak": 69.47, "employed_m": 138.63, "unemployed_m": 7.99},
+    {"period": "2023-08", "tpt": 5.32, "tpak": 69.59, "employed_m": 139.85, "unemployed_m": 7.86},
+    {"period": "2024-02", "tpt": 4.82, "tpak": 70.08, "employed_m": 142.19, "unemployed_m": 7.19},
+    {"period": "2024-08", "tpt": 4.91, "tpak": 70.17, "employed_m": 143.19, "unemployed_m": 7.47},
+]
+
+# =============================================================================
+# POVERTY — Semi-annual, BPS (March and September surveys)
+# =============================================================================
+POVERTY_DATA = [
+    {"period": "2018-03", "rate": 9.82, "population_m": 25.95, "poverty_line": 401220},
+    {"period": "2018-09", "rate": 9.66, "population_m": 25.67, "poverty_line": 410670},
+    {"period": "2019-03", "rate": 9.41, "population_m": 25.14, "poverty_line": 423584},
+    {"period": "2019-09", "rate": 9.22, "population_m": 24.79, "poverty_line": 440538},
+    {"period": "2020-03", "rate": 9.78, "population_m": 26.42, "poverty_line": 454652},
+    {"period": "2020-09", "rate": 10.19, "population_m": 27.55, "poverty_line": 458947},
+    {"period": "2021-03", "rate": 10.14, "population_m": 27.54, "poverty_line": 472525},
+    {"period": "2021-09", "rate": 9.71, "population_m": 26.50, "poverty_line": 486168},
+    {"period": "2022-03", "rate": 9.54, "population_m": 26.16, "poverty_line": 505469},
+    {"period": "2022-09", "rate": 9.57, "population_m": 26.36, "poverty_line": 530644},
+    {"period": "2023-03", "rate": 9.36, "population_m": 25.90, "poverty_line": 550458},
+    {"period": "2023-09", "rate": 9.36, "population_m": 25.22, "poverty_line": 582932},
+    {"period": "2024-03", "rate": 9.03, "population_m": 25.22, "poverty_line": 582932},
+]
+
+# Urban vs Rural Poverty (%, 2024-03, BPS)
+POVERTY_URBAN_RURAL = {
+    "urban": {"rate": 7.09, "population_m": 11.85},
+    "rural": {"rate": 11.79, "population_m": 13.37},
+    "period": "2024-03",
+}
+
+# =============================================================================
+# TRADE — Monthly, USD millions (BPS)
+# =============================================================================
+TRADE_MONTHLY = [
+    {"period": "2022-01", "exports": 19162, "imports": 16770},
+    {"period": "2022-02", "exports": 20659, "imports": 16226},
+    {"period": "2022-03", "exports": 26550, "imports": 20756},
+    {"period": "2022-04", "exports": 27318, "imports": 19762},
+    {"period": "2022-05", "exports": 21511, "imports": 21980},
+    {"period": "2022-06", "exports": 26040, "imports": 21358},
+    {"period": "2022-07", "exports": 25864, "imports": 21630},
+    {"period": "2022-08", "exports": 27896, "imports": 21978},
+    {"period": "2022-09", "exports": 24828, "imports": 20476},
+    {"period": "2022-10", "exports": 24013, "imports": 19282},
+    {"period": "2022-11", "exports": 24119, "imports": 19695},
+    {"period": "2022-12", "exports": 23831, "imports": 18869},
+    {"period": "2023-01", "exports": 22312, "imports": 18340},
+    {"period": "2023-02", "exports": 21403, "imports": 15958},
+    {"period": "2023-03", "exports": 20634, "imports": 17273},
+    {"period": "2023-04", "exports": 19295, "imports": 15919},
+    {"period": "2023-05", "exports": 20680, "imports": 17695},
+    {"period": "2023-06", "exports": 20617, "imports": 17274},
+    {"period": "2023-07", "exports": 20912, "imports": 18192},
+    {"period": "2023-08", "exports": 22048, "imports": 20498},
+    {"period": "2023-09", "exports": 20799, "imports": 18572},
+    {"period": "2023-10", "exports": 22150, "imports": 18329},
+    {"period": "2023-11", "exports": 22428, "imports": 19201},
+    {"period": "2023-12", "exports": 22413, "imports": 19112},
+    {"period": "2024-01", "exports": 18484, "imports": 18821},
+    {"period": "2024-02", "exports": 19632, "imports": 18498},
+    {"period": "2024-03", "exports": 22431, "imports": 21960},
+    {"period": "2024-04", "exports": 19640, "imports": 16930},
+    {"period": "2024-05", "exports": 22350, "imports": 18834},
+    {"period": "2024-06", "exports": 20837, "imports": 18616},
+    {"period": "2024-07", "exports": 22164, "imports": 20618},
+    {"period": "2024-08", "exports": 23490, "imports": 21158},
+    {"period": "2024-09", "exports": 22080, "imports": 18827},
+    {"period": "2024-10", "exports": 24187, "imports": 19268},
+    {"period": "2024-11", "exports": 23555, "imports": 19399},
+    {"period": "2024-12", "exports": 22004, "imports": 18640},
+]
+
+# Top Export Commodities (2023, USD billion, BPS)
+TOP_EXPORT_COMMODITIES = [
+    {"commodity": "Minyak Kelapa Sawit & Turunan", "value_b": 26.73},
+    {"commodity": "Batu Bara", "value_b": 29.54},
+    {"commodity": "Besi & Baja", "value_b": 23.48},
+    {"commodity": "Gas Alam", "value_b": 11.19},
+    {"commodity": "Karet & Produk Karet", "value_b": 5.65},
+    {"commodity": "Tekstil & Pakaian", "value_b": 7.58},
+    {"commodity": "Elektronik & Mesin", "value_b": 6.91},
+    {"commodity": "Lainnya", "value_b": 46.06},
+]
+
+# =============================================================================
+# REGIONAL — Provincial GDP Growth (%, 2023, BPS)
+# =============================================================================
+REGIONAL_GDP = [
+    {"province_code": "11", "province_name": "Aceh", "gdp_growth": 4.26, "gdp_per_capita_m_idr": 32.4},
+    {"province_code": "12", "province_name": "Sumatera Utara", "gdp_growth": 4.96, "gdp_per_capita_m_idr": 56.8},
+    {"province_code": "13", "province_name": "Sumatera Barat", "gdp_growth": 4.62, "gdp_per_capita_m_idr": 46.5},
+    {"province_code": "14", "province_name": "Riau", "gdp_growth": 3.60, "gdp_per_capita_m_idr": 97.3},
+    {"province_code": "15", "province_name": "Jambi", "gdp_growth": 4.47, "gdp_per_capita_m_idr": 60.1},
+    {"province_code": "16", "province_name": "Sumatera Selatan", "gdp_growth": 5.33, "gdp_per_capita_m_idr": 59.4},
+    {"province_code": "17", "province_name": "Bengkulu", "gdp_growth": 3.90, "gdp_per_capita_m_idr": 36.2},
+    {"province_code": "18", "province_name": "Lampung", "gdp_growth": 4.03, "gdp_per_capita_m_idr": 42.3},
+    {"province_code": "19", "province_name": "Kep. Bangka Belitung", "gdp_growth": 4.07, "gdp_per_capita_m_idr": 60.7},
+    {"province_code": "21", "province_name": "Kepulauan Riau", "gdp_growth": 5.00, "gdp_per_capita_m_idr": 93.7},
+    {"province_code": "31", "province_name": "DKI Jakarta", "gdp_growth": 4.96, "gdp_per_capita_m_idr": 310.7},
+    {"province_code": "32", "province_name": "Jawa Barat", "gdp_growth": 4.84, "gdp_per_capita_m_idr": 46.9},
+    {"province_code": "33", "province_name": "Jawa Tengah", "gdp_growth": 5.10, "gdp_per_capita_m_idr": 42.1},
+    {"province_code": "34", "province_name": "DI Yogyakarta", "gdp_growth": 5.07, "gdp_per_capita_m_idr": 36.0},
+    {"province_code": "35", "province_name": "Jawa Timur", "gdp_growth": 4.95, "gdp_per_capita_m_idr": 59.9},
+    {"province_code": "36", "province_name": "Banten", "gdp_growth": 4.49, "gdp_per_capita_m_idr": 46.2},
+    {"province_code": "51", "province_name": "Bali", "gdp_growth": 5.70, "gdp_per_capita_m_idr": 59.0},
+    {"province_code": "52", "province_name": "Nusa Tenggara Barat", "gdp_growth": 5.60, "gdp_per_capita_m_idr": 28.9},
+    {"province_code": "53", "province_name": "Nusa Tenggara Timur", "gdp_growth": 3.68, "gdp_per_capita_m_idr": 18.6},
+    {"province_code": "61", "province_name": "Kalimantan Barat", "gdp_growth": 5.07, "gdp_per_capita_m_idr": 56.5},
+    {"province_code": "62", "province_name": "Kalimantan Tengah", "gdp_growth": 5.82, "gdp_per_capita_m_idr": 76.4},
+    {"province_code": "63", "province_name": "Kalimantan Selatan", "gdp_growth": 4.47, "gdp_per_capita_m_idr": 62.1},
+    {"province_code": "64", "province_name": "Kalimantan Timur", "gdp_growth": 6.22, "gdp_per_capita_m_idr": 219.8},
+    {"province_code": "65", "province_name": "Kalimantan Utara", "gdp_growth": 7.07, "gdp_per_capita_m_idr": 183.1},
+    {"province_code": "71", "province_name": "Sulawesi Utara", "gdp_growth": 5.75, "gdp_per_capita_m_idr": 56.0},
+    {"province_code": "72", "province_name": "Sulawesi Tengah", "gdp_growth": 12.12, "gdp_per_capita_m_idr": 96.3},
+    {"province_code": "73", "province_name": "Sulawesi Selatan", "gdp_growth": 4.70, "gdp_per_capita_m_idr": 54.7},
+    {"province_code": "74", "province_name": "Sulawesi Tenggara", "gdp_growth": 5.55, "gdp_per_capita_m_idr": 56.2},
+    {"province_code": "75", "province_name": "Gorontalo", "gdp_growth": 4.56, "gdp_per_capita_m_idr": 30.4},
+    {"province_code": "76", "province_name": "Sulawesi Barat", "gdp_growth": 5.56, "gdp_per_capita_m_idr": 36.9},
+    {"province_code": "81", "province_name": "Maluku", "gdp_growth": 5.56, "gdp_per_capita_m_idr": 32.3},
+    {"province_code": "82", "province_name": "Maluku Utara", "gdp_growth": 20.49, "gdp_per_capita_m_idr": 72.9},
+    {"province_code": "91", "province_name": "Papua Barat", "gdp_growth": 3.76, "gdp_per_capita_m_idr": 72.1},
+    {"province_code": "94", "province_name": "Papua", "gdp_growth": 7.00, "gdp_per_capita_m_idr": 54.3},
+]
+
+# Provincial Unemployment (TPT, %, 2024-02, BPS)
+REGIONAL_UNEMPLOYMENT = [
+    {"province_code": "11", "province_name": "Aceh", "tpt": 6.03},
+    {"province_code": "12", "province_name": "Sumatera Utara", "tpt": 5.42},
+    {"province_code": "13", "province_name": "Sumatera Barat", "tpt": 5.76},
+    {"province_code": "14", "province_name": "Riau", "tpt": 4.19},
+    {"province_code": "15", "province_name": "Jambi", "tpt": 4.02},
+    {"province_code": "16", "province_name": "Sumatera Selatan", "tpt": 4.14},
+    {"province_code": "17", "province_name": "Bengkulu", "tpt": 3.37},
+    {"province_code": "18", "province_name": "Lampung", "tpt": 4.03},
+    {"province_code": "19", "province_name": "Kep. Bangka Belitung", "tpt": 3.72},
+    {"province_code": "21", "province_name": "Kepulauan Riau", "tpt": 7.13},
+    {"province_code": "31", "province_name": "DKI Jakarta", "tpt": 6.84},
+    {"province_code": "32", "province_name": "Jawa Barat", "tpt": 7.43},
+    {"province_code": "33", "province_name": "Jawa Tengah", "tpt": 4.78},
+    {"province_code": "34", "province_name": "DI Yogyakarta", "tpt": 3.68},
+    {"province_code": "35", "province_name": "Jawa Timur", "tpt": 4.41},
+    {"province_code": "36", "province_name": "Banten", "tpt": 7.86},
+    {"province_code": "51", "province_name": "Bali", "tpt": 1.69},
+    {"province_code": "52", "province_name": "Nusa Tenggara Barat", "tpt": 2.61},
+    {"province_code": "53", "province_name": "Nusa Tenggara Timur", "tpt": 3.07},
+    {"province_code": "61", "province_name": "Kalimantan Barat", "tpt": 3.37},
+    {"province_code": "62", "province_name": "Kalimantan Tengah", "tpt": 3.14},
+    {"province_code": "63", "province_name": "Kalimantan Selatan", "tpt": 3.95},
+    {"province_code": "64", "province_name": "Kalimantan Timur", "tpt": 5.58},
+    {"province_code": "65", "province_name": "Kalimantan Utara", "tpt": 3.90},
+    {"province_code": "71", "province_name": "Sulawesi Utara", "tpt": 6.14},
+    {"province_code": "72", "province_name": "Sulawesi Tengah", "tpt": 2.60},
+    {"province_code": "73", "province_name": "Sulawesi Selatan", "tpt": 4.21},
+    {"province_code": "74", "province_name": "Sulawesi Tenggara", "tpt": 3.11},
+    {"province_code": "75", "province_name": "Gorontalo", "tpt": 3.31},
+    {"province_code": "76", "province_name": "Sulawesi Barat", "tpt": 2.16},
+    {"province_code": "81", "province_name": "Maluku", "tpt": 7.00},
+    {"province_code": "82", "province_name": "Maluku Utara", "tpt": 4.31},
+    {"province_code": "91", "province_name": "Papua Barat", "tpt": 4.06},
+    {"province_code": "94", "province_name": "Papua", "tpt": 2.84},
+]
+
+# Provincial Poverty Rate (%, 2024-03, BPS)
+REGIONAL_POVERTY = [
+    {"province_code": "11", "province_name": "Aceh", "rate": 14.23},
+    {"province_code": "12", "province_name": "Sumatera Utara", "rate": 8.07},
+    {"province_code": "13", "province_name": "Sumatera Barat", "rate": 5.99},
+    {"province_code": "14", "province_name": "Riau", "rate": 6.75},
+    {"province_code": "15", "province_name": "Jambi", "rate": 7.43},
+    {"province_code": "16", "province_name": "Sumatera Selatan", "rate": 11.95},
+    {"province_code": "17", "province_name": "Bengkulu", "rate": 14.27},
+    {"province_code": "18", "province_name": "Lampung", "rate": 11.63},
+    {"province_code": "19", "province_name": "Kep. Bangka Belitung", "rate": 4.47},
+    {"province_code": "21", "province_name": "Kepulauan Riau", "rate": 5.74},
+    {"province_code": "31", "province_name": "DKI Jakarta", "rate": 4.30},
+    {"province_code": "32", "province_name": "Jawa Barat", "rate": 7.36},
+    {"province_code": "33", "province_name": "Jawa Tengah", "rate": 10.54},
+    {"province_code": "34", "province_name": "DI Yogyakarta", "rate": 11.27},
+    {"province_code": "35", "province_name": "Jawa Timur", "rate": 10.08},
+    {"province_code": "36", "province_name": "Banten", "rate": 5.84},
+    {"province_code": "51", "province_name": "Bali", "rate": 3.91},
+    {"province_code": "52", "province_name": "Nusa Tenggara Barat", "rate": 13.85},
+    {"province_code": "53", "province_name": "Nusa Tenggara Timur", "rate": 19.96},
+    {"province_code": "61", "province_name": "Kalimantan Barat", "rate": 6.72},
+    {"province_code": "62", "province_name": "Kalimantan Tengah", "rate": 5.23},
+    {"province_code": "63", "province_name": "Kalimantan Selatan", "rate": 4.56},
+    {"province_code": "64", "province_name": "Kalimantan Timur", "rate": 6.11},
+    {"province_code": "65", "province_name": "Kalimantan Utara", "rate": 6.49},
+    {"province_code": "71", "province_name": "Sulawesi Utara", "rate": 7.30},
+    {"province_code": "72", "province_name": "Sulawesi Tengah", "rate": 12.33},
+    {"province_code": "73", "province_name": "Sulawesi Selatan", "rate": 8.60},
+    {"province_code": "74", "province_name": "Sulawesi Tenggara", "rate": 11.51},
+    {"province_code": "75", "province_name": "Gorontalo", "rate": 15.13},
+    {"province_code": "76", "province_name": "Sulawesi Barat", "rate": 11.14},
+    {"province_code": "81", "province_name": "Maluku", "rate": 16.42},
+    {"province_code": "82", "province_name": "Maluku Utara", "rate": 6.26},
+    {"province_code": "91", "province_name": "Papua Barat", "rate": 20.49},
+    {"province_code": "94", "province_name": "Papua", "rate": 26.03},
+]
